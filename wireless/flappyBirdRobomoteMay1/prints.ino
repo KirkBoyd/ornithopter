@@ -3,24 +3,24 @@ void printSticksLcd(){
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Ax");
-  lcd.print(analogRead(joyAx));
+  lcd.print(data_robomote.Ax);
   lcd.print("y");
-  lcd.print(analogRead(joyAy));
+  lcd.print(data_robomote.Ay);
   lcd.print("z");
-  lcd.print(analogRead(joyAz));
+  lcd.print(data_robomote.Az);
   lcd.print("T");
-  lcd.print(digitalRead(joyTrigA));
+  lcd.print(data_robomote.Atrig);
   //print joystick B info
   lcd.setCursor(0,1);
   lcd.print("Bx");
-  lcd.print(analogRead(joyBx));
+  lcd.print(data_robomote.Bx);
   lcd.print("y");
-  lcd.print(analogRead(joyBy));
+  lcd.print(data_robomote.By);
   lcd.print("z");
-  lcd.print(analogRead(joyBz));
+  lcd.print(data_robomote.Bz);
   lcd.print("T");
-  lcd.print(digitalRead(joyTrigB));
-  delay(200);
+  lcd.print(data_robomote.Btrig);
+  //delay(200);
 }
 
 void printSticksSerial(){
@@ -47,20 +47,31 @@ void printSticksSerial(){
 void printSticksSendingSerial(){
   //print joystick A info
   Serial.print("\nAx: ");
-  Serial.print(data_send.Ax);
+  Serial.print(data_robomote.Ax);
   Serial.print("\t\t Ay: ");
-  Serial.print(data_send.Ay);
+  Serial.print(data_robomote.Ay);
   Serial.print("\t\t Az: ");
-  Serial.print(data_send.Az);
+  Serial.print(data_robomote.Az);
   Serial.print("\t\t AT: ");
-  Serial.print(data_send.Atrig);
+  Serial.print(data_robomote.Atrig);
   //print joystick B info
   Serial.print("\t\t Bx: ");
-  Serial.print(data_send.Bx);
+  Serial.print(data_robomote.Bx);
   Serial.print("\t\t By: ");
-  Serial.print(data_send.By);
+  Serial.print(data_robomote.By);
   Serial.print("\t\t Bz: ");
-  Serial.print(data_send.Bz);
+  Serial.print(data_robomote.Bz);
   Serial.print("\t\t BT: ");
-  Serial.print(data_send.Btrig);
+  Serial.print(data_robomote.Btrig);
+}
+
+void printBirdo(){
+  Serial.print("\nHall1: ");
+  Serial.print(data_birdo.hall1);
+  Serial.print("\t\t Hall2: ");
+  Serial.print(data_birdo.hall2);
+  Serial.print("\t\t Ax: ");
+  Serial.print(data_birdo.accelX);
+  Serial.print("\t\t Ay: ");
+  Serial.print(data_birdo.accelY);
 }

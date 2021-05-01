@@ -39,7 +39,7 @@ RF24 radio(6, 5); // CE (Blue) - Pin6 Teensy; CSN (Yellow) - Pin5 Teensy
   //SCK(Green) - Pin13; MOSI(Dark Green) - Pin11; MISO(White) - Pin12
 const byte addresses[][6] = {"10501","10502"};
 
-struct SEND_DATA_STRUCTURE{ //data sent from this device, must match receive on other arduino
+struct ROBOMOTE_DATA_STRUCTURE{ //data sent from this device, must match receive on other arduino
   int16_t Ax;
   int16_t Ay;
   int16_t Az;
@@ -57,16 +57,17 @@ struct SEND_DATA_STRUCTURE{ //data sent from this device, must match receive on 
   int By;
   int Bz;
   int Btrig;
+ROBOMOTE_DATA_STRUCTURE data_robomote; //create an object of send structure
 
-struct RECEIVE_DATA_STRUCTURE_REMOTE{
+struct BIRDO_DATA_STRUCTURE{
   int16_t accelX;
   int16_t accelY;
   int16_t hall1;
   int16_t hall2;
 };
 
-SEND_DATA_STRUCTURE data_send; //create an object of send structure
-RECEIVE_DATA_STRUCTURE_REMOTE data_remote; //create an object of receive structure
+
+BIRDO_DATA_STRUCTURE data_birdo; //create an object of receive structure
 
 /* Dynamic Variables */
 int pot1 = 0;
@@ -91,18 +92,21 @@ void setup() {
 
 void loop() {
   readSticks();
-  //printSticksSerial();
   //lcd.clear();
   //lcd.setCursor(0,0);
   //lcd.print("Printing to Serial");
-  //printSticksLcd();
-  //radio.stopListening();
-  //data1[1] = analogRead(joyBz);
-  //data1[1] = -map(data1[1],0,1023,0,180);
-  //Serial.println(data1[1]);
-  //radio.write(&data1[1], sizeof(data1[1]));
-  printSticksSendingSerial();
-  radio.write(&data_send, sizeof(SEND_DATA_STRUCTURE));
+  radio.stopListening();
+  if (millis()%4 == 0){printSticksLcd();}
+  radio.write(&data_robomote, sizeof(ROBOMOTE_DATA_STRUCTURE));
+  radio.startListening();
+  delay(4);
+  if (radio.available()){
+    
+    radio.read(&data_birdo, sizeof(BIRDO_DATA_STRUCTURE));
+    printBirdo ();
+    radio.stopListening();
+    
+  }
 }
 
 void readSticks() {
@@ -115,14 +119,14 @@ void readSticks() {
   sticks[6] =   analogRead(joyBz);
   sticks[7] =   digitalRead(joyTrigB);
 
-  data_send.Ax    =   sticks[0];
-  data_send.Ay    =   sticks[1];
-  data_send.Az    =   sticks[2];
-  data_send.Atrig =   sticks[3];
-  data_send.Bx    =   sticks[4];
-  data_send.By    =   sticks[5];
-  data_send.Bz    =   sticks[6];
-  data_send.Btrig =   sticks[7];
+  data_robomote.Ax    =   sticks[0];
+  data_robomote.Ay    =   sticks[1];
+  data_robomote.Az    =   sticks[2];
+  data_robomote.Atrig =   sticks[3];
+  data_robomote.Bx    =   sticks[4];
+  data_robomote.By    =   sticks[5];
+  data_robomote.Bz    =   sticks[6];
+  data_robomote.Btrig =   sticks[7];
 }
 
 void initPins(){
