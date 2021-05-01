@@ -23,9 +23,10 @@ filenames {14} = 'apr24_run6_loadcell_reformat.txt';     filenames {15} = 'apr24
 raw = cell(15,1);
 for i = 1:length(filenames)
     raw{i} = importData(filenames{i});
+    
 end
 
-%% Plot Load Cell Data
+%% Plot Load Cell Data  (Raw input)
 subplot(8,1,1); plot(raw{1}.data); title('Calib'); ylabel("Load Cell Mass [g]");
 subplot(8,1,2); plot(raw{2}.data); title('NoWings'); ylabel("Load Cell Mass [g]");
 subplot(8,1,3); plot(raw{4}.data); title('Run1'); ylabel("Load Cell Mass [g]");
@@ -34,7 +35,48 @@ subplot(8,1,5); plot(raw{8}.data); title('Run3'); ylabel("Load Cell Mass [g]");
 subplot(8,1,6); plot(raw{10}.data);title('Run4'); ylabel("Load Cell Mass [g]");
 subplot(8,1,7); plot(raw{12}.data);title('Run5'); ylabel("Load Cell Mass [g]");
 subplot(8,1,8); plot(raw{14}.data);title('Run6'); ylabel("Load Cell Mass [g]");
-sgtitle("Load Cell");
+sgtitle("Load Cell Data Straight From Arduino");
+
+%% Apply Mass offset
+offset = cell(length(raw),1);
+for i = 1:length(filenames)
+    offset{i} = raw{i}.data - raw{i}.data(10);
+end
+
+%% Plot Load Cell Data  (With Mass Offset)
+figure;
+subplot(8,1,1); plot(offset{1}); title('Calib'); ylabel("Load Cell Mass [g]");
+subplot(8,1,2); plot(offset{2}); title('NoWings'); ylabel("Load Cell Mass [g]");
+subplot(8,1,3); plot(offset{4}); title('Run1'); ylabel("Load Cell Mass [g]");
+subplot(8,1,4); plot(offset{6}); title('Run2'); ylabel("Load Cell Mass [g]");
+subplot(8,1,5); plot(offset{8}); title('Run3'); ylabel("Load Cell Mass [g]");
+subplot(8,1,6); plot(offset{10});title('Run4'); ylabel("Load Cell Mass [g]");
+subplot(8,1,7); plot(offset{12});title('Run5'); ylabel("Load Cell Mass [g]");
+subplot(8,1,8); plot(offset{14});title('Run6'); ylabel("Load Cell Mass [g]");
+sgtitle("Load Cell Data with stationary mass subtracted");
+
+%% Convert to Forces
+force = cell(length(raw),1);
+for i = 1:length(filenames)
+    force{i} = (offset{i}*10^-3)*9.81;
+end
+
+%% Plot Load Cell Data  (With Mass Offset)
+figure;
+subplot(8,1,1); plot(force{1}); title('Calib'); ylabel("Force [N]");
+subplot(8,1,2); plot(force{2}); title('NoWings'); ylabel("Force [N]");
+subplot(8,1,3); plot(force{4}); title('Run1'); ylabel("Force [N]");
+subplot(8,1,4); plot(force{6}); title('Run2'); ylabel("Force [N]");
+subplot(8,1,5); plot(force{8}); title('Run3'); ylabel("Force [N]");
+subplot(8,1,6); plot(force{10});title('Run4'); ylabel("Force [N]");
+subplot(8,1,7); plot(force{12});title('Run5'); ylabel("Force [N]");
+subplot(8,1,8); plot(force{14});title('Run6'); ylabel("Force [N]");
+sgtitle("Force Measured by Load Cell (Mass * g)");
+
+%% Plot a few flaps to compare to model
+figure;
+plot(force{14});title('Run6 just a few flaps'); ylabel("Force [N]");
+xlim([250 400]);
 
 %% Fix time scale
 

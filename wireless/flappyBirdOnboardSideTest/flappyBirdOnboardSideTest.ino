@@ -24,7 +24,8 @@
 #define hallPin2 A8 //analog port 8 (pin 22 on Teensy)
 
 /* Radio Setup*/
-RF24 radio(6, 5); // CE, CSN
+RF24 radio(6, 5); // CE (Blue) - pin 6 pn teensy, CSN(Yellow) - Pin 5 on teensy
+// SCK (green) pin 
 const byte addresses[][6] = {"10501","10502"};
 
 /* ESC Setup */
@@ -65,6 +66,7 @@ void loop() {
   delay(3);
   if(radio.available()){ //check if there is a signal coming in
     //while(radio.available()){
+    delay(20);
       radio.read(&pot1,sizeof(pot1)); //recieve potentiometer value
       Serial.print("Pot: ");
       Serial.println(pot1);
@@ -79,16 +81,16 @@ void loop() {
   }
   
   radio.stopListening();
-  int data1[] = {analogRead(hallPin1)}; //,analogRead(hallPin2)};
+  int data1[] = {analogRead(hallPin1),analogRead(hallPin2)};
   accelData[0] = accel.x();
   accelData[1] = accel.y();
   Serial.print(data1[0]);
   Serial.print(" ");
-  //Serial.print(data1[1]);
-  //Serial.print(" ");
+  Serial.print(data1[1]);
+  Serial.print(" ");
   radio.write(&data1[0], sizeof(data1[0]));
   //delay(5);
-  //radio.write(&data1[1], sizeof(data1[1]));
+  radio.write(&data1[1], sizeof(data1[1]));
   delay(20);
   radio.write(&accelData[0],sizeof(accelData[0]));
   //delay(5);

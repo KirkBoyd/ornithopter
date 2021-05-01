@@ -3,17 +3,15 @@
 % Last Modified by: Kirk Boyd - April 10, 2021
 %
 
-clc; % clear command line
-clear; % clear workspace so new values are always calculated; prevents carrying over old values if changes are made
-close all; % close all figures so we don't end up with tons of figures after running it several times in a row
+clc;clear;close all;set(0,'DefaultFigureWindowStyle','docked');
 
 %% Experimental Parameters 
 % Mass Properties %
-    M = .15; %[kg]; mass of the whole ornithopter
+    M = .85; %[kg]; mass of the whole ornithopter
 
 % Geometry %
     wDown = 0.35; %[m]; width of a flat plate which would represent projected area of wing on DOWNstroke; very rough guess;  
-    wUp = 0.21; %[m]; width of a flat plate which would represent projected area of wing on UPstroke; very rough guess;
+    wUp = 0.0001; %[m]; width of a flat plate which would represent projected area of wing on UPstroke; very rough guess;
     l = 0.45; %[m]; length of same flat plate
 
 % Timing %
@@ -105,3 +103,11 @@ title('Impulse as a Function of Time','Interpreter','latex');
 xlabel('Time t [s]','Interpreter','latex');
 ylabel('Impulse J [N*s]','Interpreter','latex');
 legend('Impulse due to Gravity [$J_{W}$]','Impulse due to Flapping [$J_{Flap}$]','Interpreter','latex');
+
+%% Testing
+% Nevermind for now. was going to try to plot grams instead of drag force
+% but that does not makes sense
+% it makes more sense to multiply the load cell data by 'g' and compare the
+% two
+%figure;
+%grams = Fd/9.81;
